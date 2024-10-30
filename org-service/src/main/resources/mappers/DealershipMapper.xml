@@ -17,13 +17,16 @@
         <result column="short_name" property="shortName" />
         <result column="eng_name" property="engName" />
         <result column="former_name" property="formerName" />
-        <result column="type" property="type" />
+        <result column="store_format" property="storeFormat" />
+        <result column="service_type" property="serviceType" />
         <result column="registered_capital" property="registeredCapital" />
         <result column="showroom_area" property="showroomArea" />
         <result column="ground_area" property="groundArea" />
         <result column="business_scope" property="businessScope" />
         <result column="business_hours" property="businessHours" />
         <result column="address" property="address" />
+        <result column="lon" property="lon" />
+        <result column="lat" property="lat" />
         <result column="province_code" property="provinceCode" />
         <result column="city_code" property="cityCode" />
         <result column="county_code" property="countyCode" />
@@ -42,18 +45,18 @@
 
     <!-- 通用查询结果列 -->
     <sql id="baseColumnList">
-        id, code, name, short_name, eng_name, former_name, type, registered_capital, showroom_area, ground_area, business_scope, business_hours, address, province_code, city_code, county_code, fax, tel, mobile, zipcode, email, service_tel, legal_person, manager, state, enable, sort, 
+        id, code, name, short_name, eng_name, former_name, store_format, service_type, registered_capital, showroom_area, ground_area, business_scope, business_hours, address, lon, lat, province_code, city_code, county_code, fax, tel, mobile, zipcode, email, service_tel, legal_person, manager, state, enable, sort, 
         description, create_time, create_by, modify_time, modify_by, row_version, row_valid
     </sql>
 
     <!-- 插入 -->
     <insert id="insertPo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO tb_dealership (
-            id, code, name, short_name, eng_name, former_name, type, registered_capital, showroom_area, ground_area, business_scope, business_hours, address, province_code, city_code, county_code, fax, tel, mobile, zipcode, email, service_tel, legal_person, manager, state, enable, sort, 
+            id, code, name, short_name, eng_name, former_name, store_format, service_type, registered_capital, showroom_area, ground_area, business_scope, business_hours, address, lon, lat, province_code, city_code, county_code, fax, tel, mobile, zipcode, email, service_tel, legal_person, manager, state, enable, sort, 
             description, create_time, create_by, modify_time, modify_by, row_version, row_valid
         )
         VALUES (
-            #{id}, #{code}, #{name}, #{shortName}, #{engName}, #{formerName}, #{type}, #{registeredCapital}, #{showroomArea}, #{groundArea}, #{businessScope}, #{businessHours}, #{address}, #{provinceCode}, #{cityCode}, #{countyCode}, #{fax}, #{tel}, #{mobile}, #{zipcode}, #{email}, #{serviceTel}, #{legalPerson}, #{manager}, #{state}, #{enable}, #{sort}, 
+            #{id}, #{code}, #{name}, #{shortName}, #{engName}, #{formerName}, #{storeFormat}, #{serviceType}, #{registeredCapital}, #{showroomArea}, #{groundArea}, #{businessScope}, #{businessHours}, #{address}, #{lon}, #{lat}, #{provinceCode}, #{cityCode}, #{countyCode}, #{fax}, #{tel}, #{mobile}, #{zipcode}, #{email}, #{serviceTel}, #{legalPerson}, #{manager}, #{state}, #{enable}, #{sort}, 
             #{description}, now(), #{createBy}, now(), #{modifyBy}, 1, 1
         )
     </insert>
@@ -61,13 +64,13 @@
     <!-- 批量插入 -->
     <insert id="batchInsertPo" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
         INSERT INTO tb_dealership (
-            id, code, name, short_name, eng_name, former_name, type, registered_capital, showroom_area, ground_area, business_scope, business_hours, address, province_code, city_code, county_code, fax, tel, mobile, zipcode, email, service_tel, legal_person, manager, state, enable, sort, 
+            id, code, name, short_name, eng_name, former_name, store_format, service_type, registered_capital, showroom_area, ground_area, business_scope, business_hours, address, lon, lat, province_code, city_code, county_code, fax, tel, mobile, zipcode, email, service_tel, legal_person, manager, state, enable, sort, 
             description, create_time, create_by, modify_time, modify_by, row_version, row_valid
         )
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
         (
-            #{item.id}, #{item.code}, #{item.name}, #{item.shortName}, #{item.engName}, #{item.formerName}, #{item.type}, #{item.registeredCapital}, #{item.showroomArea}, #{item.groundArea}, #{item.businessScope}, #{item.businessHours}, #{item.address}, #{item.provinceCode}, #{item.cityCode}, #{item.countyCode}, #{item.fax}, #{item.tel}, #{item.mobile}, #{item.zipcode}, #{item.email}, #{item.serviceTel}, #{item.legalPerson}, #{item.manager}, #{item.state}, #{item.enable}, #{item.sort}, 
+            #{item.id}, #{item.code}, #{item.name}, #{item.shortName}, #{item.engName}, #{item.formerName}, #{item.storeFormat}, #{item.serviceType}, #{item.registeredCapital}, #{item.showroomArea}, #{item.groundArea}, #{item.businessScope}, #{item.businessHours}, #{item.address}, #{item.lon}, #{item.lat}, #{item.provinceCode}, #{item.cityCode}, #{item.countyCode}, #{item.fax}, #{item.tel}, #{item.mobile}, #{item.zipcode}, #{item.email}, #{item.serviceTel}, #{item.legalPerson}, #{item.manager}, #{item.state}, #{item.enable}, #{item.sort}, 
             #{item.description}, now(), #{item.createBy}, now(), #{item.modifyBy}, 1, 1
         )
         </foreach>
@@ -91,8 +94,11 @@
         <if test="formerName != null and formerName != ''">
             t.former_name = #{formerName},
         </if>
-        <if test="type != null">
-            t.type = #{type},
+        <if test="storeFormat != null">
+            t.store_format = #{storeFormat},
+        </if>
+        <if test="serviceType != null and serviceType != ''">
+            t.service_type = #{serviceType},
         </if>
         <if test="registeredCapital != null">
             t.registered_capital = #{registeredCapital},
@@ -111,6 +117,12 @@
         </if>
         <if test="address != null and address != ''">
             t.address = #{address},
+        </if>
+        <if test="lon != null and lon != ''">
+            t.lon = #{lon},
+        </if>
+        <if test="lat != null and lat != ''">
+            t.lat = #{lat},
         </if>
         <if test="provinceCode != null and provinceCode != ''">
             t.province_code = #{provinceCode},
@@ -211,8 +223,11 @@
         <if test="formerName != null and formerName != ''">
             AND t.former_name = #{formerName}
         </if>
-        <if test="type != null">
-            AND t.type = #{type}
+        <if test="storeFormat != null">
+            AND t.store_format = #{storeFormat}
+        </if>
+        <if test="serviceType != null and serviceType != ''">
+            AND t.service_type = #{serviceType}
         </if>
         <if test="registeredCapital != null">
             AND t.registered_capital = #{registeredCapital}
@@ -231,6 +246,12 @@
         </if>
         <if test="address != null and address != ''">
             AND t.address = #{address}
+        </if>
+        <if test="lon != null and lon != ''">
+            AND t.lon = #{lon}
+        </if>
+        <if test="lat != null and lat != ''">
+            AND t.lat = #{lat}
         </if>
         <if test="provinceCode != null and provinceCode != ''">
             AND t.province_code = #{provinceCode}
@@ -301,6 +322,18 @@
         FROM tb_dealership t
         WHERE t.row_valid = 1
         <!-- 添加自定义条件 -->
+        <if test="serviceType != null and serviceType != ''">
+            AND FIND_IN_SET(#{serviceType}, t.service_type)
+        </if>
+        <if test="provinceCode != null and provinceCode != ''">
+            AND t.province_code = #{provinceCode}
+        </if>
+        <if test="cityCode != null and cityCode != ''">
+            AND t.city_code = #{cityCode}
+        </if>
+        <if test="countyCode != null and countyCode != ''">
+            AND t.county_code = #{countyCode}
+        </if>
         ORDER BY t.id DESC
     </select>
 

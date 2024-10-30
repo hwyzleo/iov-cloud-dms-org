@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
  * </p>
  *
  * @author hwyz_leo
- * @since 2024-10-29
+ * @since 2024-10-30
  */
 @Getter
 @Setter
@@ -65,10 +65,16 @@ public class DealershipPo extends BasePo {
     private String formerName;
 
     /**
-     * 门店类型：1-直营，2-授权，3-经销
+     * 经营类型：1-直营，2-授权，3-经销
      */
-    @TableField("type")
-    private Short type;
+    @TableField("store_format")
+    private Short storeFormat;
+
+    /**
+     * 服务类型：S-销售，D-交付，A-售后
+     */
+    @TableField("service_type")
+    private String serviceType;
 
     /**
      * 注册资金
@@ -101,10 +107,22 @@ public class DealershipPo extends BasePo {
     private String businessHours;
 
     /**
-     * 联系地址
+     * 门店地址
      */
     @TableField("address")
     private String address;
+
+    /**
+     * 地址经度
+     */
+    @TableField("lon")
+    private String lon;
+
+    /**
+     * 地址纬度
+     */
+    @TableField("lat")
+    private String lat;
 
     /**
      * 省级行政区代码
@@ -182,7 +200,7 @@ public class DealershipPo extends BasePo {
      * 是否启用
      */
     @TableField("enable")
-    private Byte enable;
+    private Boolean enable;
 
     /**
      * 排序
