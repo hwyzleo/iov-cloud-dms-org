@@ -6,9 +6,9 @@ import net.hwyz.iov.cloud.dms.org.api.contract.Dealership;
 import net.hwyz.iov.cloud.dms.org.api.contract.enums.DealershipServiceType;
 import net.hwyz.iov.cloud.dms.org.api.feign.mp.DealershipMpApi;
 import net.hwyz.iov.cloud.dms.org.service.application.service.DealershipAppService;
-import net.hwyz.iov.cloud.tsp.framework.commons.bean.ClientAccount;
-import net.hwyz.iov.cloud.tsp.framework.commons.bean.Response;
-import net.hwyz.iov.cloud.tsp.framework.commons.util.ParamHelper;
+import net.hwyz.iov.cloud.framework.common.bean.ClientAccount;
+import net.hwyz.iov.cloud.framework.common.bean.Response;
+import net.hwyz.iov.cloud.framework.common.util.ParamHelper;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
