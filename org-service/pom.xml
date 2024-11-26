@@ -28,14 +28,14 @@
 
         <!-- 框架: 异常 -->
         <dependency>
-            <groupId>net.hwyz.iov.cloud.tsp</groupId>
+            <groupId>net.hwyz.iov.cloud.framework</groupId>
             <artifactId>framework-exception-starter</artifactId>
             <version>${framework-exception.version}</version>
         </dependency>
 
         <!-- 框架: MySQL -->
         <dependency>
-            <groupId>net.hwyz.iov.cloud.tsp</groupId>
+            <groupId>net.hwyz.iov.cloud.framework</groupId>
             <artifactId>framework-mysql-starter</artifactId>
             <version>${framework-mysql.version}</version>
         </dependency>
