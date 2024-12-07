@@ -1,5 +1,6 @@
 package net.hwyz.iov.cloud.dms.org.service.application.service;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -7,15 +8,14 @@ import net.hwyz.iov.cloud.dms.org.api.contract.Dealership;
 import net.hwyz.iov.cloud.dms.org.api.contract.enums.DealershipServiceType;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.assembler.DealershipPoAssembler;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.dao.DealershipDao;
+import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.po.DealershipPo;
+import net.hwyz.iov.cloud.framework.common.util.ParamHelper;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GlobalPosition;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 销售门店应用服务类
@@ -28,6 +28,59 @@ import java.util.Map;
 public class DealershipAppService {
 
     private final DealershipDao dealershipDao;
+
+    /**
+     * 查询门店信息
+     *
+     * @param code      车辆平台代码
+     * @param name      车辆平台名称
+     * @param beginTime 开始时间
+     * @param endTime   结束时间
+     * @return 车辆平台列表
+     */
+    public List<DealershipPo> search(String code, String name, Date beginTime, Date endTime) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", code);
+        map.put("name", ParamHelper.fuzzyQueryParam(name));
+        map.put("beginTime", beginTime);
+        map.put("endTime", endTime);
+        return dealershipDao.selectPoByMap(map);
+    }
+
+    /**
+     * 检查门店代码是否唯一
+     *
+     * @param dealershipId 门店ID
+     * @param code         门店代码
+     * @return 结果
+     */
+    public Boolean checkCodeUnique(Long dealershipId, String code) {
+        if (ObjUtil.isNull(dealershipId)) {
+            dealershipId = -1L;
+        }
+        DealershipPo dealershipPo = getDealershipByCode(code);
+        return !ObjUtil.isNotNull(dealershipPo) || dealershipPo.getId().longValue() == dealershipId.longValue();
+    }
+
+    /**
+     * 根据主键ID获取门店信息
+     *
+     * @param id 主键ID
+     * @return 门店信息
+     */
+    public DealershipPo getDealershipById(Long id) {
+        return dealershipDao.selectPoById(id);
+    }
+
+    /**
+     * 根据门店代码获取门店信息
+     *
+     * @param code 门店代码
+     * @return 门店信息
+     */
+    public DealershipPo getDealershipByCode(String code) {
+        return dealershipDao.selectPoByCode(code);
+    }
 
     /**
      * 获取销售门店列表
@@ -70,6 +123,36 @@ public class DealershipAppService {
                 return Integer.MAX_VALUE * -1;
             }
         })).toList();
+    }
+
+    /**
+     * 新增门店
+     *
+     * @param dealership 门店信息
+     * @return 结果
+     */
+    public int createDealership(DealershipPo dealership) {
+        return dealershipDao.insertPo(dealership);
+    }
+
+    /**
+     * 修改门店
+     *
+     * @param dealership 门店信息
+     * @return 结果
+     */
+    public int modifyDealership(DealershipPo dealership) {
+        return dealershipDao.updatePo(dealership);
+    }
+
+    /**
+     * 批量删除门店
+     *
+     * @param ids 门店ID数组
+     * @return 结果
+     */
+    public int deleteDealershipByIds(Long[] ids) {
+        return dealershipDao.batchPhysicalDeletePo(ids);
     }
 
 }

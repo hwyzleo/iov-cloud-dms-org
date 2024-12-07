@@ -15,4 +15,20 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface DealershipDao extends BaseDao<DealershipPo, Long> {
 
+    /**
+     * 通过code查询门店信息
+     *
+     * @param code 门店编码
+     * @return 门店信息
+     */
+    DealershipPo selectPoByCode(String code);
+
+    /**
+     * 批量物理删除门店信息
+     *
+     * @param ids 门店id数组
+     * @return 影响行数
+     */
+    int batchPhysicalDeletePo(Long[] ids);
+
 }
