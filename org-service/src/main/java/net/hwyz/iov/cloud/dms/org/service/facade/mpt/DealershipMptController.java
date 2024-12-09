@@ -39,7 +39,7 @@ public class DealershipMptController extends BaseController implements Dealershi
      * @param dealership 门店信息
      * @return 门店信息列表
      */
-    @RequiresPermissions("dms:org:dealership:list")
+    @RequiresPermissions("org:dealership:info:list")
     @Override
     @GetMapping(value = "/list")
     public TableDataInfo list(DealershipMpt dealership) {
@@ -58,7 +58,7 @@ public class DealershipMptController extends BaseController implements Dealershi
      * @param dealership 门店信息
      */
     @Log(title = "门店管理", businessType = BusinessType.EXPORT)
-    @RequiresPermissions("dms:org:dealership:export")
+    @RequiresPermissions("org:dealership:info:export")
     @Override
     @PostMapping("/export")
     public void export(HttpServletResponse response, DealershipMpt dealership) {
@@ -71,7 +71,7 @@ public class DealershipMptController extends BaseController implements Dealershi
      * @param dealershipId 门店ID
      * @return 门店信息
      */
-    @RequiresPermissions("dms:org:dealership:query")
+    @RequiresPermissions("org:dealership:info:query")
     @Override
     @GetMapping(value = "/{dealershipId}")
     public AjaxResult getInfo(@PathVariable Long dealershipId) {
@@ -87,7 +87,7 @@ public class DealershipMptController extends BaseController implements Dealershi
      * @return 结果
      */
     @Log(title = "门店管理", businessType = BusinessType.INSERT)
-    @RequiresPermissions("dms:org:dealership:add")
+    @RequiresPermissions("org:dealership:info:add")
     @Override
     @PostMapping
     public AjaxResult add(@Validated @RequestBody DealershipMpt dealership) {
@@ -107,7 +107,7 @@ public class DealershipMptController extends BaseController implements Dealershi
      * @return 结果
      */
     @Log(title = "门店管理", businessType = BusinessType.UPDATE)
-    @RequiresPermissions("dms:org:dealership:edit")
+    @RequiresPermissions("org:dealership:info:edit")
     @Override
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody DealershipMpt dealership) {
@@ -127,7 +127,7 @@ public class DealershipMptController extends BaseController implements Dealershi
      * @return 结果
      */
     @Log(title = "门店管理", businessType = BusinessType.DELETE)
-    @RequiresPermissions("dms:org:dealership:remove")
+    @RequiresPermissions("org:dealership:info:remove")
     @Override
     @DeleteMapping("/{dealershipIds}")
     public AjaxResult remove(@PathVariable Long[] dealershipIds) {
