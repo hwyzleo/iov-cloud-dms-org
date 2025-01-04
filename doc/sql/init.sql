@@ -1,3 +1,26 @@
+DROP TABLE IF EXISTS `db_org`.`tb_org`;
+CREATE TABLE `db_org`.`tb_org`
+(
+    `id`          BIGINT       NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `parent_id`   BIGINT                DEFAULT NULL COMMENT '父组织ID',
+    `ancestors`   VARCHAR(255)          DEFAULT NULL COMMENT '祖籍列表',
+    `code`        VARCHAR(50)  NOT NULL COMMENT '组织代码',
+    `name`        VARCHAR(255) NOT NULL COMMENT '组织名称',
+    `org_type`    VARCHAR(255) NOT NULL COMMENT '组织类型',
+    `enable`      TINYINT      NOT NULL COMMENT '是否启用',
+    `sort`        INT          NOT NULL COMMENT '排序',
+    `description` VARCHAR(255)          DEFAULT NULL COMMENT '备注',
+    `create_time` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`   BIGINT                DEFAULT NULL COMMENT '创建者',
+    `modify_time` TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+    `modify_by`   BIGINT                DEFAULT NULL COMMENT '修改者',
+    `row_version` INT                   DEFAULT NULL COMMENT '记录版本',
+    `row_valid`   TINYINT               DEFAULT NULL COMMENT '是否有效',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY (`code`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='组织结构';
+
 DROP TABLE IF EXISTS `db_org`.`tb_dealership`;
 CREATE TABLE `db_org`.`tb_dealership`
 (
@@ -42,3 +65,22 @@ CREATE TABLE `db_org`.`tb_dealership`
     UNIQUE KEY (`code`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4 COMMENT ='销售门店';
+
+DROP TABLE IF EXISTS `db_org`.`tb_dealership_staff`;
+CREATE TABLE `db_org`.`tb_dealership_staff`
+(
+    `id`              BIGINT      NOT NULL AUTO_INCREMENT COMMENT '主键',
+    `dealership_code` VARCHAR(50) NOT NULL COMMENT '门店代码',
+    `user_id`         BIGINT      NOT NULL COMMENT '员工用户ID',
+    `description`     VARCHAR(255)         DEFAULT NULL COMMENT '备注',
+    `create_time`     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `create_by`       BIGINT               DEFAULT NULL COMMENT '创建者',
+    `modify_time`     TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间',
+    `modify_by`       BIGINT               DEFAULT NULL COMMENT '修改者',
+    `row_version`     INT                  DEFAULT NULL COMMENT '记录版本',
+    `row_valid`       TINYINT              DEFAULT NULL COMMENT '是否有效',
+    PRIMARY KEY (`id`),
+    UNIQUE KEY (`user_id`),
+    KEY `idx_dealership_code` (`dealership_code`) USING BTREE
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='销售门店员工';

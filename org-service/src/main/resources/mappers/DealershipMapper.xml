@@ -192,7 +192,7 @@
         WHERE t.id = #{value}
     </delete>
 
-    <!-- 批量物理删除车辆平台信息 -->
+    <!-- 批量物理删除 -->
     <delete id="batchPhysicalDeletePo" parameterType="Long">
         DELETE FROM tb_dealership t
         WHERE t.id IN
