@@ -183,7 +183,7 @@
         <if test="name != null and name != ''">
             AND t.name LIKE #{name}
         </if>
-        ORDER BY t.id DESC
+        ORDER BY t.sort ASC, t.id DESC
     </select>
 
     <!-- 通过code查询组织结构 -->
