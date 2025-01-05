@@ -149,6 +149,6 @@ public class DealershipMptController extends BaseController implements Dealershi
     @GetMapping(value = "/orgTree")
     public AjaxResult orgTree(OrgMpt org) {
         logger.info("管理后台用户[{}]获取组织树结构", SecurityUtils.getUsername());
-        return success(orgAppService.selectOrgTreeList(org.getCode(), org.getName()));
+        return success(orgAppService.selectOrgTreeList(org.getCode(), org.getName(), org.getOrgType(), org.getRegionCode()));
     }
 }

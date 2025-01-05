@@ -48,7 +48,8 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     @GetMapping(value = "/list")
     public TableDataInfo list(OrgMpt org) {
         logger.info("管理后台用户[{}]查询组织结构", SecurityUtils.getUsername());
-        List<OrgPo> platformPoList = orgAppService.search(org.getCode(), org.getName(), getBeginTime(org), getEndTime(org));
+        List<OrgPo> platformPoList = orgAppService.search(org.getCode(), org.getName(), org.getOrgType(), null,
+                getBeginTime(org), getEndTime(org));
         List<OrgMpt> dealershipMptList = OrgMptAssembler.INSTANCE.fromPoList(platformPoList);
         return getDataTable(dealershipMptList);
     }
@@ -64,7 +65,8 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     @GetMapping(value = "/list/exclude/{orgId}")
     public TableDataInfo listExcludeChild(@PathVariable Long orgId) {
         logger.info("管理后台用户[{}]查询组织结构（排除节点[{}]）", SecurityUtils.getUsername(), orgId);
-        List<OrgPo> platformPoList = orgAppService.search(null, null, null, null);
+        List<OrgPo> platformPoList = orgAppService.search(null, null, null, null,
+                null, null);
         List<OrgMpt> dealershipMptList = OrgMptAssembler.INSTANCE.fromPoList(platformPoList);
         dealershipMptList.removeIf(d -> d.getId().longValue() == orgId || ArrayUtils.contains(StrUtil.splitToArray(d.getAncestors(), ","), orgId + ""));
         return getDataTable(dealershipMptList);

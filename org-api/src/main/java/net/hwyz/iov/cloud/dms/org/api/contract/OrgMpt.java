@@ -30,6 +30,11 @@ public class OrgMpt extends BaseRequest {
     private Long parentId;
 
     /**
+     * 大区代码
+     */
+    private String regionCode;
+
+    /**
      * 祖籍列表
      */
     private String ancestors;

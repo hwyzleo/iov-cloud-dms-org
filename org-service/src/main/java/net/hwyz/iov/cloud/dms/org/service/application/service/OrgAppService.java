@@ -7,6 +7,7 @@ import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.dao.OrgDao;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.po.OrgPo;
 import net.hwyz.iov.cloud.framework.common.bean.TreeSelect;
 import net.hwyz.iov.cloud.framework.common.util.ParamHelper;
+import net.hwyz.iov.cloud.framework.common.util.StrUtil;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,16 +28,25 @@ public class OrgAppService {
     /**
      * 查询组织结构
      *
-     * @param code      车辆平台代码
-     * @param name      车辆平台名称
-     * @param beginTime 开始时间
-     * @param endTime   结束时间
+     * @param code       组织架构代码
+     * @param name       组织架构名称
+     * @param orgType    组织架构类型
+     * @param parentCode 上级组织代码
+     * @param beginTime  开始时间
+     * @param endTime    结束时间
      * @return 车辆平台列表
      */
-    public List<OrgPo> search(String code, String name, Date beginTime, Date endTime) {
+    public List<OrgPo> search(String code, String name, String orgType, String parentCode, Date beginTime, Date endTime) {
         Map<String, Object> map = new HashMap<>();
         map.put("code", code);
         map.put("name", ParamHelper.fuzzyQueryParam(name));
+        if (StrUtil.isNotBlank(parentCode)) {
+            OrgPo parentOrg = getOrgByCode(parentCode);
+            if (parentOrg != null) {
+                map.put("parentId", parentOrg.getId());
+            }
+        }
+        map.put("orgType", orgType);
         map.put("beginTime", beginTime);
         map.put("endTime", endTime);
         return orgDao.selectPoByMap(map);
@@ -45,12 +55,14 @@ public class OrgAppService {
     /**
      * 查询组织树结构信息
      *
-     * @param code 组织结构代码
-     * @param name 组织结构名称
+     * @param code       组织结构代码
+     * @param name       组织结构名称
+     * @param orgType    组织架构类型
+     * @param parentCode 上级代码
      * @return 组织树结构信息
      */
-    public List<TreeSelect> selectOrgTreeList(String code, String name) {
-        List<OrgPo> orgPoList = search(code, name, null, null);
+    public List<TreeSelect> selectOrgTreeList(String code, String name, String orgType, String parentCode) {
+        List<OrgPo> orgPoList = search(code, name, orgType, parentCode, null, null);
         return buildDeptTreeSelect(orgPoList);
     }
 
