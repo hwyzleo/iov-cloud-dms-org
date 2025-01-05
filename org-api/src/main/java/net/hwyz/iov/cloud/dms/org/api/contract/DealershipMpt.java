@@ -38,6 +38,16 @@ public class DealershipMpt extends BaseRequest {
     private String address;
 
     /**
+     * 大区代码
+     */
+    private String regionCode;
+
+    /**
+     * 小区代码
+     */
+    private String areaCode;
+
+    /**
      * 排序
      */
     private Integer sort;

@@ -4,8 +4,10 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import net.hwyz.iov.cloud.dms.org.api.contract.DealershipMpt;
+import net.hwyz.iov.cloud.dms.org.api.contract.OrgMpt;
 import net.hwyz.iov.cloud.dms.org.api.feign.mpt.DealershipMptApi;
 import net.hwyz.iov.cloud.dms.org.service.application.service.DealershipAppService;
+import net.hwyz.iov.cloud.dms.org.service.application.service.OrgAppService;
 import net.hwyz.iov.cloud.dms.org.service.facade.assembler.DealershipMptAssembler;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.po.DealershipPo;
 import net.hwyz.iov.cloud.framework.audit.annotation.Log;
@@ -31,6 +33,7 @@ import java.util.List;
 @RequestMapping(value = "/mpt/dealership")
 public class DealershipMptController extends BaseController implements DealershipMptApi {
 
+    private final OrgAppService orgAppService;
     private final DealershipAppService dealershipAppService;
 
     /**
@@ -46,7 +49,7 @@ public class DealershipMptController extends BaseController implements Dealershi
         logger.info("管理后台用户[{}]分页查询门店信息", SecurityUtils.getUsername());
         startPage();
         List<DealershipPo> platformPoList = dealershipAppService.search(dealership.getCode(), dealership.getName(),
-                getBeginTime(dealership), getEndTime(dealership));
+                dealership.getRegionCode(), dealership.getAreaCode(), getBeginTime(dealership), getEndTime(dealership));
         List<DealershipMpt> dealershipMptList = DealershipMptAssembler.INSTANCE.fromPoList(platformPoList);
         return getDataTable(platformPoList, dealershipMptList);
     }
@@ -135,4 +138,17 @@ public class DealershipMptController extends BaseController implements Dealershi
         return toAjax(dealershipAppService.deleteDealershipByIds(dealershipIds));
     }
 
+    /**
+     * 获取组织树结构
+     *
+     * @param org 组织架构
+     * @return 组织树结构
+     */
+    @RequiresPermissions("org:dealership:info:list")
+    @Override
+    @GetMapping(value = "/orgTree")
+    public AjaxResult orgTree(OrgMpt org) {
+        logger.info("管理后台用户[{}]获取组织树结构", SecurityUtils.getUsername());
+        return success(orgAppService.selectOrgTreeList(org.getCode(), org.getName()));
+    }
 }

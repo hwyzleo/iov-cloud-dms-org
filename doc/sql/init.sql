@@ -40,6 +40,8 @@ CREATE TABLE `db_org`.`tb_dealership`
     `address`            VARCHAR(255)          DEFAULT NULL COMMENT '门店地址',
     `lon`                VARCHAR(50)           DEFAULT NULL COMMENT '地址经度',
     `lat`                VARCHAR(50)           DEFAULT NULL COMMENT '地址纬度',
+    `region_code`        VARCHAR(50)           DEFAULT NULL COMMENT '大区代码',
+    `area_code`          VARCHAR(50)           DEFAULT NULL COMMENT '小区代码',
     `province_code`      VARCHAR(20)           DEFAULT NULL COMMENT '省级行政区代码',
     `city_code`          VARCHAR(20)           DEFAULT NULL COMMENT '地区级行政区代码',
     `county_code`        VARCHAR(20)           DEFAULT NULL COMMENT '县级行政区代码',

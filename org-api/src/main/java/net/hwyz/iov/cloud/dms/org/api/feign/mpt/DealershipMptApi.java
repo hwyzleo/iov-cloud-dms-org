@@ -2,6 +2,7 @@ package net.hwyz.iov.cloud.dms.org.api.feign.mpt;
 
 import jakarta.servlet.http.HttpServletResponse;
 import net.hwyz.iov.cloud.dms.org.api.contract.DealershipMpt;
+import net.hwyz.iov.cloud.dms.org.api.contract.OrgMpt;
 import net.hwyz.iov.cloud.framework.common.web.domain.AjaxResult;
 import net.hwyz.iov.cloud.framework.common.web.page.TableDataInfo;
 
@@ -59,5 +60,13 @@ public interface DealershipMptApi {
      * @return 结果
      */
     AjaxResult remove(Long[] dealershipIds);
+
+    /**
+     * 获取组织树结构
+     *
+     * @param org 组织架构
+     * @return 组织树结构
+     */
+    AjaxResult orgTree(OrgMpt org);
 
 }

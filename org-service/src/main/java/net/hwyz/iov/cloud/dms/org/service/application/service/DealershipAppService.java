@@ -32,16 +32,21 @@ public class DealershipAppService {
     /**
      * 查询门店信息
      *
-     * @param code      车辆平台代码
-     * @param name      车辆平台名称
-     * @param beginTime 开始时间
-     * @param endTime   结束时间
+     * @param code       车辆平台代码
+     * @param name       车辆平台名称
+     * @param regionCode 大区代码
+     * @param areaCode   小区代码
+     * @param beginTime  开始时间
+     * @param endTime    结束时间
      * @return 车辆平台列表
      */
-    public List<DealershipPo> search(String code, String name, Date beginTime, Date endTime) {
+    public List<DealershipPo> search(String code, String name, String regionCode, String areaCode, Date beginTime,
+                                     Date endTime) {
         Map<String, Object> map = new HashMap<>();
         map.put("code", code);
         map.put("name", ParamHelper.fuzzyQueryParam(name));
+        map.put("regionCode", regionCode);
+        map.put("areaCode", areaCode);
         map.put("beginTime", beginTime);
         map.put("endTime", endTime);
         return dealershipDao.selectPoByMap(map);

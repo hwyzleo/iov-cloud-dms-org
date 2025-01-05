@@ -128,6 +128,18 @@ public class DealershipPo extends BasePo {
     private String lat;
 
     /**
+     * 大区代码
+     */
+    @TableField("region_code")
+    private String regionCode;
+
+    /**
+     * 小区代码
+     */
+    @TableField("area_code")
+    private String areaCode;
+
+    /**
      * 省级行政区代码
      */
     @TableField("province_code")

@@ -1,21 +1,16 @@
 package net.hwyz.iov.cloud.dms.org.service.application.service;
 
 import cn.hutool.core.util.ObjUtil;
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.hwyz.iov.cloud.dms.org.api.contract.Dealership;
-import net.hwyz.iov.cloud.dms.org.api.contract.enums.DealershipServiceType;
-import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.assembler.DealershipPoAssembler;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.dao.OrgDao;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.po.OrgPo;
+import net.hwyz.iov.cloud.framework.common.bean.TreeSelect;
 import net.hwyz.iov.cloud.framework.common.util.ParamHelper;
-import org.gavaghan.geodesy.Ellipsoid;
-import org.gavaghan.geodesy.GeodeticCalculator;
-import org.gavaghan.geodesy.GlobalPosition;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 组织结构应用服务类
@@ -45,6 +40,104 @@ public class OrgAppService {
         map.put("beginTime", beginTime);
         map.put("endTime", endTime);
         return orgDao.selectPoByMap(map);
+    }
+
+    /**
+     * 查询组织树结构信息
+     *
+     * @param code 组织结构代码
+     * @param name 组织结构名称
+     * @return 组织树结构信息
+     */
+    public List<TreeSelect> selectOrgTreeList(String code, String name) {
+        List<OrgPo> orgPoList = search(code, name, null, null);
+        return buildDeptTreeSelect(orgPoList);
+    }
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param orgPoList 组织列表
+     * @return 下拉树结构列表
+     */
+    public List<TreeSelect> buildDeptTreeSelect(List<OrgPo> orgPoList) {
+        List<OrgPo> orgTrees = buildOrgTree(orgPoList);
+        return orgTrees.stream()
+                .map(this::buildDeptTreeSelect)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 构建前端所需要下拉树结构
+     *
+     * @param org 组织结构信息
+     * @return 下拉树结构
+     */
+    private TreeSelect buildDeptTreeSelect(OrgPo org) {
+        TreeSelect treeSelect = new TreeSelect();
+        treeSelect.setId(org.getCode());
+        treeSelect.setLabel(org.getName());
+        treeSelect.setType(org.getOrgType());
+        treeSelect.setChildren(org.getChildren().stream().map(this::buildDeptTreeSelect).collect(Collectors.toList()));
+        return treeSelect;
+    }
+
+    /**
+     * 构建前端所需要树结构
+     *
+     * @param orgPoList 组织列表
+     * @return 树结构列表
+     */
+    private List<OrgPo> buildOrgTree(List<OrgPo> orgPoList) {
+        List<OrgPo> returnList = new ArrayList<>();
+        List<Long> tempList = orgPoList.stream().map(OrgPo::getId).collect(Collectors.toList());
+        for (OrgPo org : orgPoList) {
+            // 如果是顶级节点, 遍历该父节点的所有子节点
+            if (!tempList.contains(org.getParentId())) {
+                recursionFn(orgPoList, org);
+                returnList.add(org);
+            }
+        }
+        if (returnList.isEmpty()) {
+            returnList = orgPoList;
+        }
+        return returnList;
+    }
+
+    /**
+     * 递归列表
+     */
+    private void recursionFn(List<OrgPo> list, OrgPo t) {
+        // 得到子节点列表
+        List<OrgPo> childList = getChildList(list, t);
+        t.setChildren(childList);
+        for (OrgPo tChild : childList) {
+            if (hasChild(list, tChild)) {
+                recursionFn(list, tChild);
+            }
+        }
+    }
+
+    /**
+     * 得到子节点列表
+     */
+    private List<OrgPo> getChildList(List<OrgPo> list, OrgPo t) {
+        List<OrgPo> tlist = new ArrayList<>();
+        Iterator<OrgPo> it = list.iterator();
+        while (it.hasNext()) {
+            OrgPo n = it.next();
+            if (ObjUtil.isNotNull(n.getParentId()) && n.getParentId().longValue() == t.getId().longValue()) {
+                tlist.add(n);
+            }
+        }
+        return tlist;
+    }
+
+    /**
+     * 判断是否有子节点
+     */
+    private boolean hasChild(List<OrgPo> list, OrgPo t) {
+        return getChildList(list, t).size() > 0 ? true : false;
     }
 
     /**
