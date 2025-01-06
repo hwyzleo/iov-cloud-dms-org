@@ -1,6 +1,7 @@
 package net.hwyz.iov.cloud.dms.org.api.contract;
 
 import lombok.*;
+import net.hwyz.iov.cloud.framework.common.annotation.Excel;
 import net.hwyz.iov.cloud.framework.common.web.domain.BaseRequest;
 
 import java.util.Date;
@@ -18,29 +19,49 @@ import java.util.Date;
 public class DealershipStaffMpt extends BaseRequest {
 
     /**
-     * 门店ID
+     * 主键
      */
     private Long id;
 
     /**
+     * 大区代码
+     */
+    private String regionCode;
+
+    /**
+     * 小区代码
+     */
+    private String areaCode;
+
+    /**
      * 门店代码
      */
-    private String code;
+    private String dealershipCode;
 
     /**
-     * 门店全称
+     * 门店名称
      */
-    private String name;
+    private String dealershipName;
 
     /**
-     * 门店地址
+     * 员工用户ID
      */
-    private String address;
+    private Long userId;
 
     /**
-     * 排序
+     * 用户账号
      */
-    private Integer sort;
+    private String userName;
+
+    /**
+     * 用户昵称
+     */
+    private String nickName;
+
+    /**
+     * 手机号码
+     */
+    private String phonenumber;
 
     /**
      * 创建时间

@@ -9,13 +9,16 @@ import net.hwyz.iov.cloud.dms.org.api.contract.enums.DealershipServiceType;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.assembler.DealershipPoAssembler;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.dao.DealershipDao;
 import net.hwyz.iov.cloud.dms.org.service.infrastructure.repository.po.DealershipPo;
+import net.hwyz.iov.cloud.framework.common.bean.TreeSelect;
 import net.hwyz.iov.cloud.framework.common.util.ParamHelper;
+import net.hwyz.iov.cloud.mpt.system.api.domain.SysUser;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GlobalPosition;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 销售门店应用服务类
@@ -32,8 +35,8 @@ public class DealershipAppService {
     /**
      * 查询门店信息
      *
-     * @param code       车辆平台代码
-     * @param name       车辆平台名称
+     * @param code       门店代码
+     * @param name       门店名称
      * @param regionCode 大区代码
      * @param areaCode   小区代码
      * @param beginTime  开始时间
@@ -50,6 +53,27 @@ public class DealershipAppService {
         map.put("beginTime", beginTime);
         map.put("endTime", endTime);
         return dealershipDao.selectPoByMap(map);
+    }
+
+    /**
+     * 根据关键字门店
+     *
+     * @param key 关键字
+     * @return 用户列表
+     */
+    public List<TreeSelect> searchByKey(String key) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", ParamHelper.fuzzyQueryParam(key));
+        List<DealershipPo> dealershipPoList = dealershipDao.selectPoByMap(map);
+        return dealershipPoList.stream()
+                .map(dealershipPo -> {
+                    TreeSelect treeSelect = new TreeSelect();
+                    treeSelect.setId(dealershipPo.getCode());
+                    treeSelect.setLabel(dealershipPo.getName());
+                    treeSelect.setType(dealershipPo.getName());
+                    return treeSelect;
+                })
+                .collect(Collectors.toList());
     }
 
     /**

@@ -48,10 +48,10 @@ public class DealershipMptController extends BaseController implements Dealershi
     public TableDataInfo list(DealershipMpt dealership) {
         logger.info("管理后台用户[{}]分页查询门店信息", SecurityUtils.getUsername());
         startPage();
-        List<DealershipPo> platformPoList = dealershipAppService.search(dealership.getCode(), dealership.getName(),
+        List<DealershipPo> dealershipPoList = dealershipAppService.search(dealership.getCode(), dealership.getName(),
                 dealership.getRegionCode(), dealership.getAreaCode(), getBeginTime(dealership), getEndTime(dealership));
-        List<DealershipMpt> dealershipMptList = DealershipMptAssembler.INSTANCE.fromPoList(platformPoList);
-        return getDataTable(platformPoList, dealershipMptList);
+        List<DealershipMpt> dealershipMptList = DealershipMptAssembler.INSTANCE.fromPoList(dealershipPoList);
+        return getDataTable(dealershipPoList, dealershipMptList);
     }
 
     /**

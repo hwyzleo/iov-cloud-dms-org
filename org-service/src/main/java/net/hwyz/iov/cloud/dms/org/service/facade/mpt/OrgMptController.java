@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 组织结构相关管理接口实现类
+ * 组织架构相关管理接口实现类
  *
  * @author hwyz_leo
  */
@@ -38,16 +38,16 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     private final OrgAppService orgAppService;
 
     /**
-     * 查询组织结构
+     * 查询组织架构
      *
-     * @param org 组织结构
-     * @return 组织结构列表
+     * @param org 组织架构
+     * @return 组织架构列表
      */
     @RequiresPermissions("org:dealership:org:list")
     @Override
     @GetMapping(value = "/list")
     public TableDataInfo list(OrgMpt org) {
-        logger.info("管理后台用户[{}]查询组织结构", SecurityUtils.getUsername());
+        logger.info("管理后台用户[{}]查询组织架构", SecurityUtils.getUsername());
         List<OrgPo> platformPoList = orgAppService.search(org.getCode(), org.getName(), org.getOrgType(), null,
                 getBeginTime(org), getEndTime(org));
         List<OrgMpt> dealershipMptList = OrgMptAssembler.INSTANCE.fromPoList(platformPoList);
@@ -55,16 +55,16 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     }
 
     /**
-     * 查询组织结构（排除节点）
+     * 查询组织架构（排除节点）
      *
-     * @param orgId 组织结构ID
-     * @return 组织结构列表
+     * @param orgId 组织架构ID
+     * @return 组织架构列表
      */
     @RequiresPermissions("org:dealership:org:list")
     @Override
     @GetMapping(value = "/list/exclude/{orgId}")
     public TableDataInfo listExcludeChild(@PathVariable Long orgId) {
-        logger.info("管理后台用户[{}]查询组织结构（排除节点[{}]）", SecurityUtils.getUsername(), orgId);
+        logger.info("管理后台用户[{}]查询组织架构（排除节点[{}]）", SecurityUtils.getUsername(), orgId);
         List<OrgPo> platformPoList = orgAppService.search(null, null, null, null,
                 null, null);
         List<OrgMpt> dealershipMptList = OrgMptAssembler.INSTANCE.fromPoList(platformPoList);
@@ -73,48 +73,48 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     }
 
     /**
-     * 导出组织结构
+     * 导出组织架构
      *
      * @param response 响应
-     * @param org      组织结构
+     * @param org      组织架构
      */
-    @Log(title = "组织结构管理", businessType = BusinessType.EXPORT)
+    @Log(title = "组织架构管理", businessType = BusinessType.EXPORT)
     @RequiresPermissions("org:dealership:org:export")
     @Override
     @PostMapping("/export")
     public void export(HttpServletResponse response, OrgMpt org) {
-        logger.info("管理后台用户[{}]导出组织结构", SecurityUtils.getUsername());
+        logger.info("管理后台用户[{}]导出组织架构", SecurityUtils.getUsername());
     }
 
     /**
-     * 根据组织结构ID获取组织结构
+     * 根据组织架构ID获取组织架构
      *
-     * @param orgId 组织结构ID
-     * @return 组织结构
+     * @param orgId 组织架构ID
+     * @return 组织架构
      */
     @RequiresPermissions("org:dealership:org:query")
     @Override
     @GetMapping(value = "/{orgId}")
     public AjaxResult getInfo(@PathVariable Long orgId) {
-        logger.info("管理后台用户[{}]根据组织结构ID[{}]获取组织结构", SecurityUtils.getUsername(), orgId);
+        logger.info("管理后台用户[{}]根据组织架构ID[{}]获取组织架构", SecurityUtils.getUsername(), orgId);
         OrgPo orgPo = orgAppService.getOrgById(orgId);
         return success(OrgMptAssembler.INSTANCE.fromPo(orgPo));
     }
 
     /**
-     * 新增组织结构
+     * 新增组织架构
      *
-     * @param org 组织结构
+     * @param org 组织架构
      * @return 结果
      */
-    @Log(title = "组织结构管理", businessType = BusinessType.INSERT)
+    @Log(title = "组织架构管理", businessType = BusinessType.INSERT)
     @RequiresPermissions("org:dealership:org:add")
     @Override
     @PostMapping
     public AjaxResult add(@Validated @RequestBody OrgMpt org) {
-        logger.info("管理后台用户[{}]新增组织结构[{}]", SecurityUtils.getUsername(), org.getCode());
+        logger.info("管理后台用户[{}]新增组织架构[{}]", SecurityUtils.getUsername(), org.getCode());
         if (!orgAppService.checkCodeUnique(org.getId(), org.getCode())) {
-            return error("新增组织结构'" + org.getCode() + "'失败，组织结构代码已存在");
+            return error("新增组织架构'" + org.getCode() + "'失败，组织架构代码已存在");
         }
         OrgPo orgPo = OrgMptAssembler.INSTANCE.toPo(org);
         orgPo.setCreateBy(SecurityUtils.getUserId().toString());
@@ -122,19 +122,19 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     }
 
     /**
-     * 修改保存组织结构
+     * 修改保存组织架构
      *
-     * @param org 组织结构
+     * @param org 组织架构
      * @return 结果
      */
-    @Log(title = "组织结构管理", businessType = BusinessType.UPDATE)
+    @Log(title = "组织架构管理", businessType = BusinessType.UPDATE)
     @RequiresPermissions("org:dealership:org:edit")
     @Override
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody OrgMpt org) {
-        logger.info("管理后台用户[{}]修改保存组织结构[{}]", SecurityUtils.getUsername(), org.getCode());
+        logger.info("管理后台用户[{}]修改保存组织架构[{}]", SecurityUtils.getUsername(), org.getCode());
         if (!orgAppService.checkCodeUnique(org.getId(), org.getCode())) {
-            return error("修改保存组织结构'" + org.getCode() + "'失败，组织结构代码已存在");
+            return error("修改保存组织架构'" + org.getCode() + "'失败，组织架构代码已存在");
         }
         OrgPo orgPo = OrgMptAssembler.INSTANCE.toPo(org);
         orgPo.setModifyBy(SecurityUtils.getUserId().toString());
@@ -142,17 +142,17 @@ public class OrgMptController extends BaseController implements OrgMptApi {
     }
 
     /**
-     * 删除组织结构
+     * 删除组织架构
      *
-     * @param orgIds 组织结构ID数组
+     * @param orgIds 组织架构ID数组
      * @return 结果
      */
-    @Log(title = "组织结构管理", businessType = BusinessType.DELETE)
+    @Log(title = "组织架构管理", businessType = BusinessType.DELETE)
     @RequiresPermissions("org:dealership:org:remove")
     @Override
     @DeleteMapping("/{orgIds}")
     public AjaxResult remove(@PathVariable Long[] orgIds) {
-        logger.info("管理后台用户[{}]删除组织结构[{}]", SecurityUtils.getUsername(), orgIds);
+        logger.info("管理后台用户[{}]删除组织架构[{}]", SecurityUtils.getUsername(), orgIds);
         return toAjax(orgAppService.deleteOrgByIds(orgIds));
     }
 

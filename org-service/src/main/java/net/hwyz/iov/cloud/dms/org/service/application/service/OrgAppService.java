@@ -153,7 +153,7 @@ public class OrgAppService {
     }
 
     /**
-     * 检查组织结构代码是否唯一
+     * 检查用户ID是否唯一
      *
      * @param orgId 组织结构ID
      * @param code  组织结构代码

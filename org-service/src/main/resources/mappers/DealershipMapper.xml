@@ -375,6 +375,9 @@
         <if test="endTime != null">
             and date_format(t.create_time,'%Y%m%d') &lt;= date_format(#{endTime},'%Y%m%d')
         </if>
+        <if test="key != null and key != ''">
+            AND (t.code LIKE #{key} OR t.name LIKE #{key})
+        </if>
         ORDER BY t.sort ASC, t.id DESC
     </select>
 
